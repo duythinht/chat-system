@@ -1,0 +1,21 @@
+{
+  "name": "socket_provider",
+  "version": "1.0.0",
+  "description": "Socket provider to push message over websocket",
+  "main": "server.js",
+  "dependencies": {
+    "express": "^4.13.3",
+    "redis": "^2.4.2",
+    "socket.io": "^1.4.4"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "socket",
+    "provider"
+  ],
+  "author": "duythinht",
+  "license": "GPL-3.0"
+}

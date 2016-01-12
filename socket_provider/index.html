@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title></title>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    var socket = io('/chat');
+    socket.on('message', function(data) {
+      console.log(data);    
+    });
+    socket.emit('authentication', 'theOne');
+  </script>
+</head>
+<body>
+  
+</body>
+</html>
