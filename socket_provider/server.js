@@ -4,16 +4,15 @@ var io = require('socket.io')(http);
 var redis = require('redis');
 var util = require('util');
 
-app.get('/', function(req, res){
-  res.sendfile('index.html');
-});
+app.get('/', (req, res) => res.sendfile('index.html'));
 
 
-app.get('/send-test', function(req, res) {
+app.get('/send-test', (req, res) => {
   // Make a new redisClient for publisher
   var redisClient = redis.createClient();
   // Test send to user 123
-  var channel = util.format('chat:user:%s', 123);
+  var  userId = 123;
+  var channel = `chat:user:${userId}`;
   redisClient.publish(channel, 'Hello world');
 
   res.end('DONE');
@@ -21,26 +20,26 @@ app.get('/send-test', function(req, res) {
 
 var chatChannel = io.of('/chat');
 
-chatChannel.on('connection', function(socket){
+chatChannel.on('connection', (socket) => {
   
   // Prepare redis client for subscribe to user channel
   var redisClient = redis.createClient();
   
-  redisClient.on('subscribe', function(channel, count) {
+  redisClient.on('subscribe', (channel, count) => {
     console.log('A client has been subscribed');
     socket.emit('message', {
       message: 'Connected and subscribed'
     });
   });
   
-  redisClient.on('message', function(channel, message) {
+  redisClient.on('message', (channel, message) => {
     // Send message to client
     socket.emit('message', {
       message: message
     });
   });
   
-  socket.on('authentication', function(access_token) {
+  socket.on('authentication', (access_token) => {
 
     var userList = {
       theOne: 123,
@@ -50,11 +49,11 @@ chatChannel.on('connection', function(socket){
     
     var userId = userList[access_token];
 
-    var channel = util.format('chat:user:%s', userId);
+    var channel = `chat:user:${userId}`;
     redisClient.subscribe(channel);
   });
 });
 
-http.listen(3000, function(){
+http.listen(3000, () => {
   console.log('listening on *:3000');
 });
