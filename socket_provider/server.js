@@ -2,7 +2,6 @@ var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var redis = require('redis');
-var util = require('util');
 
 app.get('/', (req, res) => res.sendfile('index.html'));
 
