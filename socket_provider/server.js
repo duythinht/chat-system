@@ -57,6 +57,10 @@ chatChannel.on('connection', (socket) => {
     var channel = `chat:user:${userId}`;
     redisClient.subscribe(channel);
   });
+
+  socket.on('disconnect', function () {
+    redisClient.close();
+  });
 });
 
 http.listen(3000, () => {
