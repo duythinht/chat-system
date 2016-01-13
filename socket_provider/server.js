@@ -3,12 +3,18 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var redis = require('redis');
 
+var redisOpt = {
+  host: process.env.REDIS_HOST || 'redis_server'
+};
+
+console.log(redisOpt);
+
 app.get('/', (req, res) => res.sendfile('index.html'));
 
 
 app.get('/send-test', (req, res) => {
   // Make a new redisClient for publisher
-  var redisClient = redis.createClient();
+  var redisClient = redis.createClient(redisOpt);
   // Test send to user 123
   var  userId = 123;
   var channel = `chat:user:${userId}`;
@@ -22,7 +28,7 @@ var chatChannel = io.of('/chat');
 chatChannel.on('connection', (socket) => {
   
   // Prepare redis client for subscribe to user channel
-  var redisClient = redis.createClient();
+  var redisClient = redis.createClient(redisOpt);
   
   redisClient.on('subscribe', (channel, count) => {
     console.log('A client has been subscribed');
