@@ -6,15 +6,23 @@ var bodyParser = require('body-parser');
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
+var redisOpt = {
+  host: process.env.REDIS_HOST || 'redis_server'
+};
+
+app.get('/ping', (req, res) => {
+  res.send({status: 'ok'});
+});
+
 app.post('/users/:userId/messages', (req, res) => {
-  var redisClient = redis.createClient();
+  var redisClient = redis.createClient(redisOpt);
   var channel = `chat:user:${req.params.userId}`;
   redisClient.publish(channel, JSON.stringify(req.body));
   res.send({status: 'ok'});
 });
 
 app.post('/rooms', (req, res) => {
-  var redisClient = redis.createClient();
+  var redisClient = redis.createClient(redisOpt);
   redisClient.incr('chat:system:id', (err, systemId) => {
     var roomSubscribeKey = `chat:room:${systemId}`;
     for (var userId of req.body.users) {
@@ -29,7 +37,7 @@ app.post('/rooms/:roomId/messages', (req, res) => {
   var currentUserId = 456;
 
   //Do send message
-  var redisClient = redis.createClient();
+  var redisClient = redis.createClient(redisOpt);
   var roomSubscribeKey = `chat:room:${req.params.roomId}`;
   redisClient.smembers(roomSubscribeKey, (err, users) => {
     for (var userId of users) {

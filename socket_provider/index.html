@@ -5,7 +5,7 @@
   <title></title>
   <script src="/socket.io/socket.io.js"></script>
   <script>
-    var socket = io('/chat');
+    var socket = io();
     socket.on('message', function(data) {
       console.log(data);    
     });

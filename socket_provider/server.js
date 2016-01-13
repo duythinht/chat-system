@@ -7,9 +7,7 @@ var redisOpt = {
   host: process.env.REDIS_HOST || 'redis_server'
 };
 
-console.log(redisOpt);
-
-app.get('/', (req, res) => res.sendfile('index.html'));
+app.get('/', (req, res) => res.sendFile('/src/index.html'));
 
 
 app.get('/send-test', (req, res) => {
@@ -23,9 +21,8 @@ app.get('/send-test', (req, res) => {
   res.end('DONE');
 });
 
-var chatChannel = io.of('/chat');
 
-chatChannel.on('connection', (socket) => {
+io.on('connection', (socket) => {
   
   // Prepare redis client for subscribe to user channel
   var redisClient = redis.createClient(redisOpt);
@@ -59,7 +56,7 @@ chatChannel.on('connection', (socket) => {
   });
 
   socket.on('disconnect', function () {
-    redisClient.close();
+    //redisClient.close();
   });
 });
 
