@@ -56,7 +56,7 @@ io.on('connection', (socket) => {
   });
 
   socket.on('disconnect', function () {
-    //redisClient.close();
+    redisClient.end(true);
   });
 });
 
